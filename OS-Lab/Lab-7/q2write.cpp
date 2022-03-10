@@ -13,15 +13,20 @@ int main()
     int shmid = shmget(key,1024,0666|IPC_CREAT);
   
     // shmat to attach to shared memory
-    char *str = (char*) shmat(shmid,(void*)0,0);
+    int arr[10];
+    int *ap = arr;
+    ap = (int *) shmat(shmid,(void*)0,0);
   
-    cout<<"Enter string : ";
-    cin>>str;
-  
-    printf("Data written in memory: %s\n",str);
-      
+    cout<<"Enter array elements: ";
+    for(int i=0;i<10;i++)
+    {
+        cin>>*(ap);
+        ap++;
+    } 
+    
+    cout<<"Data written!";
     //detach from shared memory 
-    shmdt(str);
+    shmdt(ap);
   
     return 0;
 }

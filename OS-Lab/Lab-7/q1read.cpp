@@ -1,4 +1,4 @@
-#include <iostream>
+#include <bits/stdc++.h>
 #include <sys/ipc.h>
 #include <sys/shm.h>
 #include <stdio.h>
@@ -15,13 +15,21 @@ int main()
     // shmat to attach to shared memory
     char *str = (char*) shmat(shmid,(void*)0,0);
   
-    cout<<"Enter string : ";
-    cin>>str;
-  
-    printf("Data written in memory: %s\n",str);
+    int vow = 0;
+		for(int i=0; i<strlen(str); i++) 
+		{
+			if(isupper(str[i]))
+				str[i]=tolower(str[i]);
+			if(str[i]=='a' || str[i]=='e' || str[i]=='i' || str[i]=='o' || str[i]=='u')
+				vow++;
+		}
+		printf("Number of vowels = %d\n", vow);
       
     //detach from shared memory 
     shmdt(str);
-  
+    
+    // destroy the shared memory
+    shmctl(shmid,IPC_RMID,NULL);
+     
     return 0;
 }

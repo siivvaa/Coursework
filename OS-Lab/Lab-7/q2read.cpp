@@ -1,4 +1,4 @@
-#include <iostream>
+#include <bits/stdc++.h>
 #include <sys/ipc.h>
 #include <sys/shm.h>
 #include <stdio.h>
@@ -13,15 +13,22 @@ int main()
     int shmid = shmget(key,1024,0666|IPC_CREAT);
   
     // shmat to attach to shared memory
-    char *str = (char*) shmat(shmid,(void*)0,0);
+    int *ap = (int *) shmat(shmid,(void*)0,0);
   
-    cout<<"Enter string : ";
-    cin>>str;
-  
-    printf("Data written in memory: %s\n",str);
-      
+    int sum = 0;
+
+    for(int i=0;i<10;i++)
+    {
+        sum+= *(ap);
+        ap++;
+    }
+
+    cout<<"Sum of all elements = "<<sum;
     //detach from shared memory 
-    shmdt(str);
-  
+    shmdt(ap);
+    
+    // destroy the shared memory
+    shmctl(shmid,IPC_RMID,NULL);
+     
     return 0;
 }
