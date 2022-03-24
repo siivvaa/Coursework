@@ -1,44 +1,59 @@
-#include<iostream>
- 
+#include<bits/stdc++.h>
 using namespace std;
  
+// Function to allocate memory to
+// blocks as per First fit algorithm
+void firstFit(int blockSize[], int m,
+              int processSize[], int n)
+{
+    // Stores block id of the
+    // block allocated to a process
+    int allocation[n];
+ 
+    // Initially no block is assigned to any process
+    memset(allocation, -1, sizeof(allocation));
+ 
+    // pick each process and find suitable blocks
+    // according to its size ad assign to it
+    for (int i = 0; i < n; i++)
+    {
+        for (int j = 0; j < m; j++)
+        {
+            if (blockSize[j] >= processSize[i])
+            {
+                // allocate block j to p[i] process
+                allocation[i] = j;
+ 
+                // Reduce available memory in this block.
+                blockSize[j] -= processSize[i];
+ 
+                break;
+            }
+        }
+    }
+ 
+    cout << "\nProcess No.\tProcess Size\tBlock no.\n";
+    for (int i = 0; i < n; i++)
+    {
+        cout << " " << i+1 << "\t\t"
+             << processSize[i] << "\t\t";
+        if (allocation[i] != -1)
+            cout << allocation[i] + 1;
+        else
+            cout << "Not Allocated";
+        cout << endl;
+    }
+}
+ 
+// Driver code
 int main()
 {
-int bsize[10], psize[10], bno, pno, flags[10], allocation[10], i, j;
+    int blockSize[] = {100, 500, 200, 300, 600};
+    int processSize[] = {212, 417, 112, 426};
+    int m = sizeof(blockSize) / sizeof(blockSize[0]);
+    int n = sizeof(processSize) / sizeof(processSize[0]);
  
-for(i = 0; i < 10; i++)
-{
-flags[i] = 0;
-allocation[i] = -1;
-}
-cout<<"Enter no. of blocks: ";
-cin>>bno;
-cout<<"\nEnter size of each block: ";
-for(i = 0; i < bno; i++)
-cin>>bsize[i];
+    firstFit(blockSize, m, processSize, n);
  
-cout<<"\nEnter no. of processes: ";
-cin>>pno;
-cout<<"\nEnter size of each process: ";
-for(i = 0; i < pno; i++)
-cin>>psize[i];
-for(i = 0; i < pno; i++)         //allocation as per first fit
-    for(j = 0; j < bno; j++)
-if(flags[j] == 0 && bsize[j] >= psize[i])
-{
-allocation[j] = i;
-flags[j] = 1;
-break;
-}
-//display allocation details
-cout<<"\nBlock no.\tsize\t\tprocess no.\t\tsize";
-for(i = 0; i < bno; i++)
-{
-cout<<"\n"<< i+1<<"\t\t"<<bsize[i]<<"\t\t";
-if(flags[i] == 1)
-cout<<allocation[i]+1<<"\t\t\t"<<psize[allocation[i]];
-else
-cout<<"Not allocated";
-}
-return 0;
+    return 0 ;
 }
